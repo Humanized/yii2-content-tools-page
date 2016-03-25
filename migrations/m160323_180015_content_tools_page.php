@@ -1,12 +1,13 @@
 <?php
 
-class Migration extends \yii\db\Migration
+class m160323_180015_content_tools_page extends \humanized\clihelpers\components\Migration
 {
 
     protected $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE=InnoDB';
 
     public function safeUp()
     {
+      //  $this->createLookupTable('content_type');
 
         $this->createTable('content_page', [
             'id' => 'pk',

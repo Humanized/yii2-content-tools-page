@@ -1,13 +1,13 @@
 <?php
 
-namespace app\controllers\common;
+namespace humanized\contenttoolspage\controllers;
 
 use Yii;
 use yii\web\Controller;
 use yii\filters\AccessControl;
 use humanized\contenttoolspage\models\ContentPage;
 use humanized\contenttoolspage\models\ContentType;
-use humanized\contenttoolspage\models\content\ContentContainer;
+use humanized\contenttoolspage\models\ContentContainer;
 use humanized\contenttoolspage\components\editor\actions\UploadAction;
 use humanized\contenttoolspage\components\editor\actions\InsertAction;
 use humanized\contenttoolspage\components\editor\actions\RotateAction;
@@ -67,20 +67,20 @@ class ContentController extends Controller
         return [];
     }
 
-    public function actionTogglePublishPage($id, $context, $sector, $caller)
+    public function actionTogglePublishPage($id, $context, $sector)
     {
         $model = ContentPage::findOne($id);
         $model->is_published = !$model->is_published;
         $model->save(false);
-        return $this->redirect(["/$context", 'sector' => $sector, 'caller' => $caller]);
+        return $this->redirect(["/$context", 'sector' => $sector, 'caller' => $model->type->name]);
     }
 
-    public function actionTogglePublishContainer($id, $context, $sector, $caller)
+    public function actionTogglePublishContainer($id, $context, $sector)
     {
         $model = ContentContainer::findOne($id);
         $model->is_published = !$model->is_published;
         $model->save(false);
-        return $this->redirect(["/$context", 'sector' => $sector, 'caller' => $caller]);
+        return $this->redirect(["/$context", 'sector' => $sector, 'caller' => $model->page->type->name]);
     }
 
     public function actionCreateContainer($id, $context, $sector, $caller)
@@ -96,9 +96,10 @@ class ContentController extends Controller
         return $this->redirect(["/$context", 'sector' => $sector, 'caller' => $caller]);
     }
 
-    public function actionDeleteContainer($id, $context, $sector, $caller)
+    public function actionDeleteContainer($id, $context, $sector)
     {
         $model = ContentContainer::findOne($id);
+        $caller = $model->page->type->name;
         $model->delete();
         return $this->redirect(["/$context", 'sector' => $sector, 'caller' => $caller]);
     }

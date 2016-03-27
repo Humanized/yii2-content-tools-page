@@ -4,17 +4,9 @@ use humanized\contenttoolspage\components\editor\ContentTools;
 use yii\helpers\Url;
 use yii\helpers\Html;
 
+$context = $this->context->id;
 if ($enableUpdate) {
-    Yii::$container->set('humanized\contenttoolspage\components\editor\ContentTools', [
-        'imagesEngine' => [
-            'upload' => Url::to([$context . '/content-tools-image-upload']),
-            'rotate' => Url::to([$context . '/content-tools-image-rotate']),
-            'insert' => Url::to([$context . '/content-tools-image-insert']),
-        ],
-        'saveEngine' => [
-            'save' => Url::to([$context . '/update']),
-        ],
-    ]);
+
 
     echo '<div class="well">';
     echo '<strong>Page Settings</strong><div class="pull-right">';

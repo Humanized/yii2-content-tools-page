@@ -43,7 +43,7 @@ For full instructions how to configure this module, check the [CONFIG](CONFIG.md
 ### Run Migrations 
 
 ```bash
-$ php yii migrate/up --migrationPath=@vendor/humanized/yii2-user/migrations
+$ php yii migrate/up --migrationPath=@vendor/humanized/yii2-content-tools/migrations
 ```
 
 For full instructions on how to use this module, once configured, check the [USAGE](USAGE.md)-file.

@@ -13,6 +13,7 @@ use common\models\base\Lookup;
 class ContentType extends Lookup
 {
 
+    const TYPE_DEFAULT = 'default';
 
     /**
      * @inheritdoc

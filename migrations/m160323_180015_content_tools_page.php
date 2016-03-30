@@ -7,8 +7,7 @@ class m160323_180015_content_tools_page extends \humanized\clihelpers\components
 
     public function safeUp()
     {
-      //  $this->createLookupTable('content_type');
-
+        $this->createLookupTable('content_type');
         $this->createTable('content_page', [
             'id' => 'pk',
             'type_id' => $this->integer()->notNull(),
@@ -20,7 +19,6 @@ class m160323_180015_content_tools_page extends \humanized\clihelpers\components
                 , $this->tableOptions);
 
         $this->addForeignKey('fk_content_page_type', 'content_page', 'type_id', 'content_type', 'id', 'CASCADE', 'CASCADE');
-
         $this->createTable('content_container', [
             'id' => 'pk',
             'page_id' => $this->integer()->notNull(),

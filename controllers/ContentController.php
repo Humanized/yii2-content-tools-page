@@ -17,6 +17,8 @@ use yii\filters\VerbFilter;
 class ContentController extends Controller
 {
 
+    public $context = NULL;
+
     public function behaviors()
     {
         return [
@@ -54,6 +56,10 @@ class ContentController extends Controller
         ];
     }
 
+    /**
+     * 
+     * @return array[]
+     */
     public function actionUpdate()
     {
         $i = 0;
@@ -67,41 +73,44 @@ class ContentController extends Controller
         return [];
     }
 
-    public function actionTogglePublishPage($id, $context, $sector)
+    public function actionTogglePublishPage($id, $sector)
     {
+
+        \Yii::$app->session->setFlash('success', $this->id);
+
         $model = ContentPage::findOne($id);
         $model->is_published = !$model->is_published;
         $model->save(false);
-        return $this->redirect(["/$context", 'sector' => $sector, 'caller' => $model->type->name]);
+        return $this->redirect(['/' . $this->id, 'sector' => $sector, 'caller' => $model->type->name]);
     }
 
-    public function actionTogglePublishContainer($id, $context, $sector)
+    public function actionTogglePublishContainer($id,  $sector)
     {
         $model = ContentContainer::findOne($id);
         $model->is_published = !$model->is_published;
         $model->save(false);
-        return $this->redirect(["/$context", 'sector' => $sector, 'caller' => $model->page->type->name]);
+        return $this->redirect(['/' . $this->id, 'sector' => $sector, 'caller' => $model->page->type->name]);
     }
 
-    public function actionCreateContainer($id, $context, $sector, $caller)
+    public function actionCreateContainer($id,  $sector, $caller)
     {
         $container = new ContentContainer([
             'page_id' => $id,
             'language_id' => 'en',
             'position' => 99,
             'is_published' => 0,
-            'data' => "<b>New Entry</b>"
+            'data' => "<b>Container:</b>"
         ]);
         $container->save();
-        return $this->redirect(["/$context", 'sector' => $sector, 'caller' => $caller]);
+        return $this->redirect(['/' . $this->id, 'sector' => $sector, 'caller' => $caller]);
     }
 
-    public function actionDeleteContainer($id, $context, $sector)
+    public function actionDeleteContainer($id,  $sector)
     {
         $model = ContentContainer::findOne($id);
         $caller = $model->page->type->name;
         $model->delete();
-        return $this->redirect(["/$context", 'sector' => $sector, 'caller' => $caller]);
+        return $this->redirect(['/' . $this->id, 'sector' => $sector, 'caller' => $caller]);
     }
 
 }

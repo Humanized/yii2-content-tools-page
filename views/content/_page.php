@@ -10,14 +10,14 @@ if ($enableUpdate) {
 
     echo '<div class="well">';
     echo '<strong>Page Settings</strong><div class="pull-right">';
-    echo Html::a(Yii::t('app', $page->is_published ? 'Unpublish' : 'Publish'), [ '/' . $context . '/toggle-publish-page', 'id' => $page->id, 'context' => $context, 'sector' => $sector->id], [
+    echo Html::a(Yii::t('app', $page->is_published ? 'Unpublish' : 'Publish'), [ '/' . $context . '/toggle-publish-page', 'id' => $page->id,  'sector' => $sector->id], [
         'class' => 'btn btn-' . ($page->is_published ? 'danger' : 'success'),
         'data' => [
             'method' => 'post',
         ],
     ]);
     echo ' ';
-    echo Html::a(Yii::t('app', 'Add Container'), [ '/' . $context . '/create-container', 'id' => $page->id, 'context' => $context, 'sector' => $sector->id, 'caller' => $caller], [
+    echo Html::a(Yii::t('app', 'Add Container'), [ '/' . $context . '/create-container', 'id' => $page->id,  'sector' => $sector->id, 'caller' => $caller], [
         'class' => 'btn btn-warning',
         'data' => [
 
@@ -44,7 +44,7 @@ foreach ($page->containers as $container) {
     if ($enableUpdate) {
         ContentTools ::end();
         echo '<br>';
-        echo Html::a(Yii::t('app', $is_published ? 'Unpublish' : 'Publish'), [ '/' . $context . '/toggle-publish-container', 'id' => $container->id, 'context' => $context, 'sector' => $sector->id], [
+        echo Html::a(Yii::t('app', $is_published ? 'Unpublish' : 'Publish'), [ '/' . $context . '/toggle-publish-container', 'id' => $container->id,  'sector' => $sector->id], [
             'class' => 'btn btn-' . ($is_published ? 'danger' : 'success'),
             'data' => [
 
@@ -52,7 +52,7 @@ foreach ($page->containers as $container) {
             ],
         ]);
         echo ' ';
-        echo Html::a(Yii::t('app', 'Delete Container'), [ '/' . $context . '/delete-container', 'id' => $container->id, 'context' => $context, 'sector' => $sector->id], [
+        echo Html::a(Yii::t('app', 'Delete Container'), [ '/' . $context . '/delete-container', 'id' => $container->id,  'sector' => $sector->id], [
             'class' => 'btn btn-danger',
             'data' => [ 'confirm' => Yii::t('app', 'Are you sure you want to delete this container?'),
                 'method' => 'post',

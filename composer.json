@@ -23,7 +23,7 @@
         }
     ],
     "require": {
-        "yiisoft/yii2": "@dev",
+        "yiisoft/yii2": "1.0,
         "bizley/contenttools": "dev-master"
     },
     "autoload": {

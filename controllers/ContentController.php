@@ -5,9 +5,10 @@ namespace humanized\contenttoolspage\controllers;
 use Yii;
 use yii\web\Controller;
 use yii\filters\AccessControl;
-use humanized\contenttoolspage\models\ContentPage;
-use humanized\contenttoolspage\models\ContentType;
-use humanized\contenttoolspage\models\ContentContainer;
+use humanized\contenttoolspage\models\core\ContentPage;
+use humanized\contenttoolspage\models\core\ContentType;
+use humanized\contenttoolspage\models\containers\ContentContainer;
+use humanized\contenttoolspage\models\containers\StaticContainer;
 use humanized\contenttoolspage\components\editor\actions\UploadAction;
 use humanized\contenttoolspage\components\editor\actions\InsertAction;
 use humanized\contenttoolspage\components\editor\actions\RotateAction;
@@ -84,7 +85,7 @@ class ContentController extends Controller
         return $this->redirect(['/' . $this->id, 'sector' => $sector, 'caller' => $model->type->name]);
     }
 
-    public function actionTogglePublishContainer($id,  $sector)
+    public function actionTogglePublishContainer($id, $sector)
     {
         $model = ContentContainer::findOne($id);
         $model->is_published = !$model->is_published;
@@ -92,7 +93,7 @@ class ContentController extends Controller
         return $this->redirect(['/' . $this->id, 'sector' => $sector, 'caller' => $model->page->type->name]);
     }
 
-    public function actionCreateContainer($id,  $sector, $caller)
+    public function actionCreateContainer($id, $sector, $caller)
     {
         $container = new ContentContainer([
             'page_id' => $id,
@@ -105,7 +106,7 @@ class ContentController extends Controller
         return $this->redirect(['/' . $this->id, 'sector' => $sector, 'caller' => $caller]);
     }
 
-    public function actionDeleteContainer($id,  $sector)
+    public function actionDeleteContainer($id, $sector)
     {
         $model = ContentContainer::findOne($id);
         $caller = $model->page->type->name;

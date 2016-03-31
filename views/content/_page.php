@@ -5,19 +5,24 @@ use yii\helpers\Url;
 use yii\helpers\Html;
 
 $context = $this->context->id;
+$contextParams = ['sector' => $sector->id];
+
+
+echo "<b> Orphan Page: </b>";
+\yii\helpers\VarDumper::dump($page->isOrphan());
+
+
 if ($enableUpdate) {
-
-
     echo '<div class="well">';
     echo '<strong>Page Settings</strong><div class="pull-right">';
-    echo Html::a(Yii::t('app', $page->is_published ? 'Unpublish' : 'Publish'), [ '/' . $context . '/toggle-publish-page', 'id' => $page->id,  'sector' => $sector->id], [
+    echo Html::a(Yii::t('app', $page->is_published ? 'Unpublish' : 'Publish'), array_merge([ '/' . $context . '/toggle-publish-page', 'id' => $page->id],$contextParams), [
         'class' => 'btn btn-' . ($page->is_published ? 'danger' : 'success'),
         'data' => [
             'method' => 'post',
         ],
     ]);
     echo ' ';
-    echo Html::a(Yii::t('app', 'Add Container'), [ '/' . $context . '/create-container', 'id' => $page->id,  'sector' => $sector->id, 'caller' => $caller], [
+    echo Html::a(Yii::t('app', 'Add Container'), [ '/' . $context . '/create-container', 'id' => $page->id, 'sector' => $sector->id, 'caller' => $caller], [
         'class' => 'btn btn-warning',
         'data' => [
 
@@ -25,7 +30,7 @@ if ($enableUpdate) {
     ]]);
     echo '</div></div>';
 }
-
+/*
 //Load page containers
 
 foreach ($page->containers as $container) {
@@ -60,4 +65,6 @@ foreach ($page->containers as $container) {
         ]);
     }
 }
+ * 
+ */
                 

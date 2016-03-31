@@ -10,27 +10,49 @@ class m160323_180015_content_tools_page extends \humanized\clihelpers\components
         $this->createLookupTable('content_type');
         $this->createTable('content_page', [
             'id' => 'pk',
+            'uid' => $this->string(30)->notNull(),
+            'parent_id' => $this->integer(),
             'type_id' => $this->integer()->notNull(),
             'title' => $this->string(100)->notNull(),
-            'is_published' => $this->boolean(FALSE)->notNull(),
+            'is_published' => $this->boolean()->defaultValue(FALSE)->notNull(),
             'created_at' => $this->integer(),
             'updated_at' => $this->integer(),
                 ]
                 , $this->tableOptions);
 
         $this->addForeignKey('fk_content_page_type', 'content_page', 'type_id', 'content_type', 'id', 'CASCADE', 'CASCADE');
-        $this->createTable('content_container', [
+        $this->addForeignKey('fk_content_page_parent', 'content_page', 'parent_id', 'content_page', 'id', 'CASCADE', 'CASCADE');
+        $this->createLookupTable('container_type');
+        $this->createTable('container', [
             'id' => 'pk',
+            'uid' => $this->string(30)->notNull(),
             'page_id' => $this->integer()->notNull(),
-            'language_id' => $this->string(2)->defaultValue('en'),
-            'is_published' => $this->boolean(FALSE)->notNull(),
+            'type_id' => $this->integer(),
+            'is_published' => $this->boolean()->defaultValue(FALSE)->notNull(),
             'position' => $this->integer()->notNull()->defaultValue(0),
-            'data' => $this->text(),
             'created_at' => $this->integer(),
             'updated_at' => $this->integer(),
                 ], $this->tableOptions);
 
-        $this->addForeignKey('fk_content_container_page', 'content_container', 'page_id', 'content_page', 'id', 'CASCADE', 'CASCADE');
+        $this->addForeignKey('fk_container_page', 'container', 'page_id', 'content_page', 'id', 'CASCADE', 'CASCADE');
+        $this->addForeignKey('fk_container_type', 'container', 'type_id', 'container_type', 'id', 'CASCADE', 'CASCADE');
+
+        //Static Content Container (For Charts & Maps)
+        $this->createTable('static_container', [
+            'id' => $this->integer(),
+            'name' => $this->string()->notNull()->unique(),
+        ]);
+
+        $this->addForeignKey('fk_static_container', 'static_container', 'id', 'container', 'id', 'CASCADE', 'CASCADE'); //CASCADE IMPORTANT
+        $this->addPrimaryKey('pk_static_container', 'static_container', 'id');
+
+        //Simple HTML Text Container
+        $this->createTable('content_container', [
+            'id' => $this->integer(),
+            'language_id' => $this->string(2)->defaultValue('EN'),
+            'data' => $this->text()], $this->tableOptions);
+        $this->addPrimaryKey('pk_content_container', 'content_container', 'id');
+        $this->addForeignKey('fk_content_container', 'content_container', 'id', 'container', 'id', 'CASCADE', 'CASCADE'); //CASCADE IMPORTANT
     }
 
     public function safeDown()

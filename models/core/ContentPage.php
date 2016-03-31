@@ -1,15 +1,18 @@
 <?php
 
-namespace humanized\contenttoolspage\models;
+namespace humanized\contenttoolspage\models\core;
 
 use Yii;
 use yii\db\ActiveRecord;
 use common\models\sector\SectorPage;
+use humanized\contenttoolspage\models\core\Container;
 
 /**
  * This is the model class for table "content_page".
  *
  * @property integer $id
+ * @property string $uid
+ * @property integer $parent_id
  * @property integer $type_id
  * @property string $title
  * @property integer $is_published
@@ -39,10 +42,13 @@ class ContentPage extends ActiveRecord
     public function rules()
     {
         return [
-            [['type_id', 'title', 'is_published'], 'required'],
+            [['uid', 'type_id', 'title', 'is_published'], 'required'],
             [['type_id', 'is_published', 'created_at', 'updated_at'], 'integer'],
+            [['uid'], 'string', 'max' => 30],
             [['title'], 'string', 'max' => 100],
             [['type_id'], 'exist', 'skipOnError' => true, 'targetClass' => ContentType::className(), 'targetAttribute' => ['type_id' => 'id']],
+            [['parent_id'], 'exist', 'skipOnError' => true, 'targetClass' => ContentPage::className(), 'targetAttribute' => ['parent_id' => 'id']],
+            [['uid'], 'unique', 'targetAttribute' => ['uid']],
         ];
     }
 
@@ -59,6 +65,19 @@ class ContentPage extends ActiveRecord
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
         ];
+    }
+
+    public function beforeValidate()
+    {
+        if (!parent::beforeValidate()) {
+            return false;
+        }
+
+        //Remote Settings Empty --> Master Mode 
+        if ($this->isNewRecord && !isset($this->uid)) {
+            $this->uid = uniqid();
+        }
+        return true;
     }
 
     public function behaviors()
@@ -80,7 +99,7 @@ class ContentPage extends ActiveRecord
      */
     public function getContainers()
     {
-        return $this->hasMany(ContentContainer::className(), ['page_id' => 'id'])->orderBy('content_container.position');
+        return $this->hasMany(Container::className(), ['page_id' => 'id'])->orderBy('container.position');
     }
 
     /**
@@ -94,24 +113,36 @@ class ContentPage extends ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getSectorPages()
+    public function getParent()
     {
-        return $this->hasMany(SectorPage::className(), ['content_page_id' => 'id']);
+        return $this->hasOne(ContentPage::className(), ['id' => 'parent_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getChildren()
+    {
+        return $this->hasMany(ContentPage::className(), ['parent_id' => 'id']);
+    }
+
+    public function isOrphan()
+    {
+        return empty($this->children);
     }
 
     public function afterSave($insert, $changedAttributes)
     {
+        $contentType = ContainerType::getIdByName(ContainerType::CONTENT_CONTAINER);
         //Create single container after insert
         if ($insert) {
-
             for ($i = 1; $i <= $this->containerCount; $i++) {
-
-                $container = new ContentContainer([
+                $container = new Container([
                     'page_id' => $this->id,
-                    'language_id' => 'en',
                     'position' => $i,
                     'is_published' => 0,
-                    'data' => "<b>$this->title page $i</b>"
+                    'type_id' => $contentType,
+                    'attr' => ['data' => '<b>' . $this->title . ' Editable Content ' . '<b>']
                 ]);
                 if (!$container->save()) {
                     \yii\helpers\VarDumper::dump($container->errors);
@@ -119,7 +150,6 @@ class ContentPage extends ActiveRecord
             }
         }
         $this->touch('updated_at');
-
         return parent::afterSave($insert, $changedAttributes);
     }
 

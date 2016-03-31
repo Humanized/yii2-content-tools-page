@@ -76,9 +76,6 @@ class ContentController extends Controller
 
     public function actionTogglePublishPage($id, $sector)
     {
-
-        \Yii::$app->session->setFlash('success', $this->id);
-
         $model = ContentPage::findOne($id);
         $model->is_published = !$model->is_published;
         $model->save(false);
@@ -87,21 +84,22 @@ class ContentController extends Controller
 
     public function actionTogglePublishContainer($id, $sector)
     {
+        \Yii::$app->session->setFlash('success', $this->id);
         $model = ContentContainer::findOne($id);
         $model->is_published = !$model->is_published;
         $model->save(false);
         return $this->redirect(['/' . $this->id, 'sector' => $sector, 'caller' => $model->page->type->name]);
     }
 
-    public function actionCreateContainer($id, $sector, $caller)
+    public function actionCreateContainer($id, $sector, $caller, $type)
     {
-        $container = new ContentContainer([
+        $container = new Container([
             'page_id' => $id,
-            'language_id' => 'en',
             'position' => 99,
             'is_published' => 0,
-            'data' => "<b>Container:</b>"
+            'type_id' => $type,
         ]);
+
         $container->save();
         return $this->redirect(['/' . $this->id, 'sector' => $sector, 'caller' => $caller]);
     }
@@ -112,6 +110,11 @@ class ContentController extends Controller
         $caller = $model->page->type->name;
         $model->delete();
         return $this->redirect(['/' . $this->id, 'sector' => $sector, 'caller' => $caller]);
+    }
+
+    public function findContainer($id)
+    {
+        
     }
 
 }

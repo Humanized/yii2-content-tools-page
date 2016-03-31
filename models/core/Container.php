@@ -62,8 +62,8 @@ class Container extends \yii\db\ActiveRecord
         //Touch timestamps
         $this->touch('updated_at');
         $this->page->touch('updated_at');
-        if(!isset($this->attr['id'])){
-            $this->attr['id']=  $this->id;
+        if (!isset($this->attr['id'])) {
+            $this->attr['id'] = $this->id;
         }
 
         $class = "\\humanized\\contenttoolspage\\models\\containers\\" . \yii\helpers\Inflector::camelize($this->type->name) . "Container";
@@ -99,12 +99,6 @@ class Container extends \yii\db\ActiveRecord
             return false;
         }
 
-        if (!isset($this->type_id)) {
-            $default = ContainerType::getIdByName(ContainerType::CONTENT_CONTAINER);
-            if (isset($default)) {
-                $this->type_id = $default['id'];
-            }
-        }
         //Remote Settings Empty --> Master Mode 
         if ($this->isNewRecord && !isset($this->uid)) {
             $this->uid = uniqid();

@@ -69,6 +69,9 @@ class ContentContainer extends \yii\db\ActiveRecord
         if (!parent::beforeSave($insert)) {
             return false;
         }
+        if(!isset($this->data)){
+            $this->data = "<b>EDITABLE CONTAINER</b>";
+        }
         $this->cleanData();
         return true;
     }

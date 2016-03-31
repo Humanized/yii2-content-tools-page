@@ -57,4 +57,15 @@ class StaticContainer extends \yii\db\ActiveRecord
         return $this->hasOne(Container::className(), ['id' => 'id']);
     }
 
+    public function beforeValidate()
+    {
+        if (!parent::beforeValidate()) {
+            return false;
+        }
+        if (!isset($this->name)) {
+            $this->name = uniqid("static-");
+        }
+        return true;
+    }
+
 }

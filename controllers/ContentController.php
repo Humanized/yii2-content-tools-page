@@ -7,6 +7,7 @@ use yii\web\Controller;
 use yii\filters\AccessControl;
 use humanized\contenttoolspage\models\core\ContentPage;
 use humanized\contenttoolspage\models\core\ContentType;
+use humanized\contenttoolspage\models\core\Container;
 use humanized\contenttoolspage\models\containers\ContentContainer;
 use humanized\contenttoolspage\models\containers\StaticContainer;
 use humanized\contenttoolspage\components\editor\actions\UploadAction;
@@ -23,12 +24,15 @@ class ContentController extends Controller
     public function behaviors()
     {
         return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete-container' => ['POST'],
-                ],
-            ],
+            /*
+              'verbs' => [
+              'class' => VerbFilter::className(),
+              'actions' => [
+              'delete-container' => ['POST'],
+              ],
+              ],
+             * 
+             */
             'access' => [
                 'class' => AccessControl::className(),
                 'rules' => [
@@ -85,7 +89,7 @@ class ContentController extends Controller
     public function actionTogglePublishContainer($id, $sector)
     {
         \Yii::$app->session->setFlash('success', $this->id);
-        $model = ContentContainer::findOne($id);
+        $model = Container::findOne($id);
         $model->is_published = !$model->is_published;
         $model->save(false);
         return $this->redirect(['/' . $this->id, 'sector' => $sector, 'caller' => $model->page->type->name]);
@@ -106,15 +110,11 @@ class ContentController extends Controller
 
     public function actionDeleteContainer($id, $sector)
     {
-        $model = ContentContainer::findOne($id);
+        $model = Container::findOne($id);
         $caller = $model->page->type->name;
         $model->delete();
         return $this->redirect(['/' . $this->id, 'sector' => $sector, 'caller' => $caller]);
     }
 
-    public function findContainer($id)
-    {
-        
-    }
-
+   
 }

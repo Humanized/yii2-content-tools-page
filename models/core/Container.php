@@ -4,7 +4,8 @@ namespace humanized\contenttoolspage\models\core;
 
 use yii\db\ActiveRecord;
 use Yii;
-
+use humanized\contenttoolspage\models\containers\ContentContainer;
+use humanized\contenttoolspage\models\containers\StaticContainer;
 /**
  * This is the model class for table "content_container".
  *

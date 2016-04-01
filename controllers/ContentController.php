@@ -21,37 +21,7 @@ class ContentController extends Controller
 
     public $context = NULL;
 
-    public function behaviors()
-    {
-        return [
-            /*
-              'verbs' => [
-              'class' => VerbFilter::className(),
-              'actions' => [
-              'delete-container' => ['POST'],
-              ],
-              ],
-             * 
-             */
-            'access' => [
-                'class' => AccessControl::className(),
-                'rules' => [
-                    [
-                        'actions' => [
-                            'index',
-                            'content-tools-image-upload',
-                            'content-tools-image-insert',
-                            'content-tools-image-rotate',
-                            'update', 'toggle-publish-page', 'toggle-publish-container', 'create-container', 'delete-container'
-                        ],
-                        'allow' => true,
-                    //'roles' => ['@'],
-                    ],
-                ],
-            ],
-        ];
-    }
-
+    
     public function actions()
     {
         return [

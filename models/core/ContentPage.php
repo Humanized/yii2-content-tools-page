@@ -126,10 +126,11 @@ class ContentPage extends ActiveRecord
         return $this->hasMany(ContentPage::className(), ['parent_id' => 'id']);
     }
 
-    public function isOrphan()
+    public function isParent()
     {
-        return empty($this->children);
+        return !empty($this->children);
     }
+
 
     public function afterSave($insert, $changedAttributes)
     {

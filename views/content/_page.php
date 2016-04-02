@@ -32,7 +32,7 @@ $contextParams = ['sector' => $sector->id];
 
 
 if ($enableUpdate) {
-  
+
     echo '<div class="well">';
     echo '<strong>Page Settings</strong><div class="pull-right">';
     echo Html::a(Yii::t('app', $page->is_published ? 'Unpublish' : 'Publish'), array_merge([ '/' . $context . '/toggle-publish-page', 'id' => $page->id], $contextParams), [
@@ -70,9 +70,15 @@ foreach ($page->containers as $container) {
     if ($container->type->name == ContainerType::STATIC_CONTAINER) {
         $caller = $container->staticContainer->name;
         if ($enableUpdate || $container->is_published) {
+
+            if ($enableUpdate) {
+                echo 'Static Container Registered as ' . kartik\helpers\Html::label($caller, ['class' => 'label-primary']) . ' ';
+            }
+            //Output Static Content when container is published
+
+
             if (isset($staticConfig[$caller])) {
                 $config = $staticConfig[$caller];
-
                 echo $this->render($config[StaticHelper::VIEW], (isset($config[StaticHelper::VIEWPARAMS])) ? $config[StaticHelper::VIEWPARAMS] : []);
             }
         }
@@ -83,7 +89,6 @@ foreach ($page->containers as $container) {
             ContentTools::begin(['id' => $container->id]);
         }
         if ($enableUpdate || $is_published) {
-
             echo '<p>';
             echo $container->contentContainer->data;
             echo '</p>';

@@ -23,7 +23,7 @@
         }
     ],
     "require": {
-        "yiisoft/yii2": "2.0.7",
+        "yiisoft/yii2": ">=2.0.7",
         "humanized/yii2-clihelpers": "*",
         "humanized/yii2-lookup": "*",
         "bizley/contenttools": "1.0"
